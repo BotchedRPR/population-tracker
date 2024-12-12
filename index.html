@@ -55,16 +55,19 @@
     <script>
         // Dane początkowe
         const startPopulation = 23353; // Populacja na start
-        const startDate = new Date('2024-07-01T00:00:00'); // Data początkowa dla obliczeń
-        const birthInterval = 16004; // Sekundy między urodzeniami
-        const deathInterval = 12083; // Sekundy między zgonami
+        const startDate = new Date('2024-06-01T00:00:00'); // Data początkowa
+        const secondsInHalfYear = 181 * 24 * 3600; // Liczba sekund w półroczu
 
-        // Obliczenie liczby urodzeń i zgonów od startu
+        // Interwały na podstawie danych
+        const birthInterval = secondsInHalfYear / 98; // Średni czas między urodzeniami w sekundach
+        const deathInterval = secondsInHalfYear / 130; // Średni czas między zgonami w sekundach
+
+        // Funkcja do obliczania populacji
         function calculatePopulation() {
-            const now = new Date(); // Aktualna data i czas
-            const elapsedSeconds = Math.floor((now - startDate) / 1000); // Czas, który minął od daty początkowej w sekundach
-            
-            // Liczba zdarzeń (urodzeń i zgonów), które już miały miejsce
+            const now = new Date();
+            const elapsedSeconds = Math.floor((now - startDate) / 1000);
+
+            // Liczba urodzeń i zgonów, które miały miejsce
             const births = Math.floor(elapsedSeconds / birthInterval);
             const deaths = Math.floor(elapsedSeconds / deathInterval);
 
@@ -74,8 +77,8 @@
 
         // Obliczanie czasu do następnego zdarzenia
         function calculateNextEvent() {
-            const now = new Date(); // Aktualna data i czas
-            const elapsedSeconds = Math.floor((now - startDate) / 1000); // Czas, który minął od daty początkowej w sekundach
+            const now = new Date();
+            const elapsedSeconds = Math.floor((now - startDate) / 1000);
 
             // Czas do kolejnych urodzeń i zgonów
             const nextBirthIn = birthInterval - (elapsedSeconds % birthInterval);
