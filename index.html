@@ -62,12 +62,81 @@
             color: #FF5733;
             margin-top: 10px;
         }
+        nav {
+          font-weight: 900;
+          text-transform: uppercase;
+          color: #007BFF;
+          cursor: pointer;
+          font-size: 3vw;
+        }
+        .sidenav {
+            margin: 5vh 0;
+            height: 60vh;
+            width: auto;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-pack: distribute;
+            justify-content: space-around;
+        }
+        .sidenav_menu {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow-x: hidden;
+            -webkit-transition: 0.5s;
+            transition: 0.5s;
+            font-weight: 700;
+            font-size: 3vw;
+            color: #fff;
+        }
+        .sidenav h1 {
+            font-size: 3vw;
+            color: #007BFF;
+        }
+        .sidenav p {
+            font-size: 2vw;
+            color: #fff;
+        }
+        .closebtn {
+              color: #007BFF;
+              top: 0;
+              font-size: 35px;
+              padding: 0 3px;
+              cursor: pointer;
+              text-decoration: none;
+              float: right;
+        }
     </style>
 </head>
 <body>
+    <nav>
+            <h3 onclick="openNav()">O Projekcie</h3>
+    </nav>
     <h1>Zegary Ludności</h1>
     <div id="counters-container"></div>
     
+    <div id="menusidenav" class="sidenav_menu">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="sidenav linesnav">
+            <h1>O Projekcie</h1>
+            <p>Add something...</p>
+        </div>
+    </div>
+
     <script>
         const counters = [
             {
@@ -209,6 +278,14 @@
         }
 
         counters.forEach(createCounter);
+
+        function openNav() {
+            document.getElementById("menusidenav").style.width = "100%";
+        }
+        function closeNav() {
+            document.getElementById("menusidenav").style.width = "0";
+        }
+
     </script>
 </body>
 </html>
