@@ -1,0 +1,130 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.counter-container {
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    width: 300px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.counter {
+    font-size: 32px;
+    color: #007BFF;
+    margin: 20px 0;
+    position: relative;
+    height: 40px;
+    /* Stała wysokość, aby liczby nie zmieniały układu */
+    overflow: hidden;
+}
+
+.digit {
+    position: absolute;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.digit.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.digit.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.timer {
+    font-size: 20px;
+    color: #FF5733;
+    margin-top: 10px;
+}
+
+nav {
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #007BFF;
+    cursor: pointer;
+    font-size: 3vw;
+}
+
+.sidenav {
+    margin: 5vh 0;
+    height: 60vh;
+    width: auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+}
+
+.sidenav_menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    overflow-x: hidden;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    font-weight: 700;
+    font-size: 3vw;
+    color: #fff;
+}
+
+.sidenav h1 {
+    font-size: 3vw;
+    color: #007BFF;
+}
+
+.sidenav p {
+    font-size: 2vw;
+    color: #fff;
+}
+
+.closebtn {
+    color: #007BFF;
+    top: 0;
+    font-size: 35px;
+    padding: 0 3px;
+    cursor: pointer;
+    text-decoration: none;
+    float: right;
+}
