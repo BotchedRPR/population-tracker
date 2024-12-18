@@ -34,108 +34,135 @@ const counters = [
 ];
 
 const secondsInHalfYear = 181 * 24 * 3600;
+let currentCounterIndex = 0;
 
-function createCounter(counter) {
+// Function to calculate the population
+function calculatePopulation(counter) {
+	const now = new Date();
+	const elapsedSeconds = Math.floor((now - counter.startDate) / 1000);
+
 	const birthInterval = secondsInHalfYear / counter.births;
 	const deathInterval = secondsInHalfYear / counter.deaths;
-	let firstUpdate = true;
 
-	function calculatePopulation() {
-		const now = new Date();
-		const elapsedSeconds = Math.floor((now - counter.startDate) / 1000);
+	const births = Math.floor(elapsedSeconds / birthInterval);
+	const deaths = Math.floor(elapsedSeconds / deathInterval);
 
-		const births = Math.floor(elapsedSeconds / birthInterval);
-		const deaths = Math.floor(elapsedSeconds / deathInterval);
+	return counter.startPopulation + births - deaths;
+}
 
-		return counter.startPopulation + births - deaths;
+// Function to format time for the next event
+function formatTime(seconds) {
+	const hours = Math.floor(seconds / 3600);
+	const minutes = Math.floor((seconds % 3600) / 60);
+	const sec = Math.floor(seconds % 60);
+	return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+}
+
+// Function to calculate the time to the next event
+function calculateNextEvent(counter) {
+	const now = new Date();
+	const elapsedSeconds = Math.floor((now - counter.startDate) / 1000);
+
+	const birthInterval = secondsInHalfYear / counter.births;
+	const deathInterval = secondsInHalfYear / counter.deaths;
+
+	const nextBirthIn = birthInterval - (elapsedSeconds % birthInterval);
+	const nextDeathIn = deathInterval - (elapsedSeconds % deathInterval);
+
+	return { nextBirthIn, nextDeathIn };
+}
+
+const proportion = 5000;
+
+// Function to animate and update the content
+function animateContent() {
+	const container = document.querySelector(".counter-container");
+
+	// Ensure the container exists
+	if (!container) {
+		console.error("The container element is missing.");
+		return;
 	}
 
-	function calculateNextEvent() {
-		const now = new Date();
-		const elapsedSeconds = Math.floor((now - counter.startDate) / 1000);
+	// Wait for the slide-out animation to finish before sliding in again
+	setTimeout(() => {
+		// After the slide-out, now slide in
+		container.classList.remove("slide-out");
+		container.classList.add("slide-in");
 
-		const nextBirthIn = birthInterval - (elapsedSeconds % birthInterval);
-		const nextDeathIn = deathInterval - (elapsedSeconds % deathInterval);
-
-		return { nextBirthIn, nextDeathIn };
-	}
-
-	function updateDisplay() {
-		const populationElement = document.getElementById(`${counter.id}-population`);
-		const newPopulation = calculatePopulation();
-
-		if (firstUpdate) {
-			setPopulation(populationElement, newPopulation, true);
-			firstUpdate = false;
-		} else {
-			const currentPopulation = parseInt(
-				populationElement.querySelector(".digit.show").textContent.replace(/\s+/g, '')
-			);
-			if (currentPopulation !== newPopulation) {
-				setPopulation(populationElement, newPopulation, false);
-			}
+		// Ensure counters and currentCounterIndex are defined
+		if (typeof currentCounterIndex === 'undefined' || !counters || counters.length === 0) {
+			console.error("Counters or currentCounterIndex is not defined correctly.");
+			return;
 		}
 
-		const { nextBirthIn, nextDeathIn } = calculateNextEvent();
-		const nextEventText =
-			nextBirthIn <= nextDeathIn
+		// Get the current counter object
+		const currentCounter = counters[currentCounterIndex];
+		const population = calculatePopulation(currentCounter);  // Ensure this function returns a valid number
+		const { nextBirthIn, nextDeathIn } = calculateNextEvent(currentCounter);
+
+		console.log("Population:", population);  // Debug log to ensure population has a valid value
+
+		// Ensure elements exist before updating them
+		const counterNameElement = document.querySelector("#counter-name");
+		const counterPopulationElement = document.querySelector("#counter-population");
+		const counterNextEventElement = document.querySelector("#counter-next-event");
+
+		if (counterNameElement && counterPopulationElement && counterNextEventElement) {
+			// Update the content dynamically
+			counterNameElement.textContent = currentCounter.name;
+
+			// Update the population content
+			if (population !== undefined && population !== null) {
+				counterPopulationElement.textContent = population.toString();  // Ensure population is converted to string
+			} else {
+				console.error("Population value is invalid.");
+			}
+
+			// Update the next event content
+			counterNextEventElement.textContent = nextBirthIn <= nextDeathIn
 				? `Za ${formatTime(nextBirthIn)} nastąpi urodzenie`
 				: `Za ${formatTime(nextDeathIn)} nastąpi zgon`;
-
-		document.getElementById(`${counter.id}-next-event`).textContent = nextEventText;
-	}
-
-	function setPopulation(element, newPopulation, instant) {
-		const newDigitElement = document.createElement("div");
-		newDigitElement.classList.add("digit");
-		if (!instant) {
-			newDigitElement.classList.add("show");
-		}
-		newDigitElement.textContent = newPopulation.toLocaleString("pl-PL");
-
-		const currentDigit = element.querySelector(".digit.show");
-		if (currentDigit) {
-			currentDigit.classList.remove("show");
-			currentDigit.classList.add("hide");
-			setTimeout(() => currentDigit.remove(), 500);
-		}
-
-		element.appendChild(newDigitElement);
-
-		if (instant) {
-			newDigitElement.classList.add("show");
 		} else {
-			setTimeout(() => newDigitElement.classList.add("show"), 10);
+			console.error("One or more elements are missing.");
 		}
-	}
 
-	function formatTime(seconds) {
-		const hours = Math.floor(seconds / 3600);
-		const minutes = Math.floor((seconds % 3600) / 60);
-		const sec = Math.floor(seconds % 60);
-		return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-	}
+		// Cycle to the next counter
+		currentCounterIndex = (currentCounterIndex + 1) % counters.length;
 
+		// Wait for the content to be updated, then slide out to the right
+		setTimeout(() => {
+			container.classList.remove("slide-in");
+			container.classList.add("slide-out");
+		}, proportion); // Delay to allow time for content update before sliding out
+
+	}, proportion/2); // Wait for the slide-in to complete before updating content
+}
+
+
+// Start the animation cycle
+function startAnimation() {
+	// Create and inject the container dynamically
 	const container = document.createElement("div");
 	container.classList.add("counter-container");
 	container.innerHTML = `
-        <h1>${counter.name}</h1>
-        <div class="counter" id="${counter.id}-population">
-            <div class="digit show">${counter.startPopulation.toLocaleString("pl-PL")}</div>
-        </div>
-        <p id="${counter.id}-next-event">Czas do zmiany: --:--:--</p>
-    `;
+	    <h1 id="counter-name"></h1>
+	    <div class="counter">
+		<div id="counter-population"></div>
+	    </div>
+	    <p id="counter-next-event"></p>
+	`;
 	document.getElementById("counters-container").appendChild(container);
 
-	updateDisplay();
-	setInterval(updateDisplay, 1000);
+	// Ensure counters and currentCounterIndex are defined
+	if (!counters || counters.length === 0) {
+		console.error("No counters data available.");
+		return;
+	}
+
+	// Initialize content and animation
+	animateContent();
+	setInterval(animateContent, proportion*2); // Adjust interval as needed
 }
 
-counters.forEach(createCounter);
-
-function openNav() {
-	document.getElementById("menusidenav").style.width = "100%";
-}
-function closeNav() {
-	document.getElementById("menusidenav").style.width = "0";
-}
+document.addEventListener("DOMContentLoaded", startAnimation);

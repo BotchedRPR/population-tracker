@@ -16,6 +16,19 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin: 10px;
     width: 300px;
+    opacity: 1;
+    position: absolute;  /* Keep it positioned relative to the viewport */
+    left: 50%;            /* Center it horizontally */
+    transform: translateX(100vh);  /* Start off-screen to the right */
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.counter-container.slide-in {
+    transform: translateX(-50%);  /* Move to the center */
+}
+
+.counter-container.slide-out {
+    transform: translateX(100vh);  /* Move off-screen to the right */
 }
 
 h1 {
@@ -30,27 +43,8 @@ h1 {
     margin: 20px 0;
     position: relative;
     height: 40px;
-    /* Stała wysokość, aby liczby nie zmieniały układu */
+    /* Fixed height to prevent layout shifts */
     overflow: hidden;
-}
-
-.digit {
-    position: absolute;
-    left: 0;
-    right: 0;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.5s ease;
-}
-
-.digit.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.digit.hide {
-    opacity: 0;
-    transform: translateY(-20px);
 }
 
 p {
@@ -77,19 +71,10 @@ nav {
     margin: 5vh 0;
     height: 60vh;
     width: auto;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
-    -ms-flex-pack: distribute;
     justify-content: space-around;
 }
 
@@ -102,8 +87,7 @@ nav {
     left: 0;
     background-color: rgba(0, 0, 0, 0.9);
     overflow-x: hidden;
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
+    transition: width 0.5s ease;
     font-weight: 700;
     font-size: 3vw;
     color: #fff;
@@ -121,10 +105,20 @@ nav {
 
 .closebtn {
     color: #007BFF;
-    top: 0;
     font-size: 35px;
     padding: 0 3px;
     cursor: pointer;
     text-decoration: none;
     float: right;
+}
+
+@media (max-width: 768px) {
+    .counter-container {
+        width: 90%;
+    }
+
+    .sidenav p,
+    .sidenav h1 {
+        font-size: 4vw;
+    }
 }
