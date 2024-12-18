@@ -133,9 +133,25 @@ function createCounter(counter) {
 
 counters.forEach(createCounter);
 
-function openNav() {
-	document.getElementById("menusidenav").style.width = "100%";
-}
-function closeNav() {
-	document.getElementById("menusidenav").style.width = "0";
-}
+// Pobierz elementy
+const modal = document.getElementById('modal');
+const openModal = document.getElementById('openModal');
+const closeModal = document.getElementById('closeModal');
+
+// Funkcja otwierająca modal
+openModal.addEventListener('click', function(event) {
+    event.preventDefault(); // Zapobiega domyślnemu działaniu linku
+    modal.style.display = 'flex';
+});
+
+// Funkcja zamykająca modal
+closeModal.addEventListener('click', function() {
+    modal.style.display = 'none';
+});
+
+// Zamknięcie modalu po kliknięciu poza okno
+window.addEventListener('click', function(event) {
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
