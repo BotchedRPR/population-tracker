@@ -79,8 +79,8 @@ function createCounter(counter) {
 		const { nextBirthIn, nextDeathIn } = calculateNextEvent();
 		const nextEventText =
 			nextBirthIn <= nextDeathIn
-				? `Za ${formatTime(nextBirthIn)} nastąpi urodzenie`
-				: `Za ${formatTime(nextDeathIn)} nastąpi zgon`;
+				? `Zmiana nastąpi za: ${formatTime(nextBirthIn)}`
+				: `Zmiana nastąpi za: ${formatTime(nextDeathIn)}`;
 
 		document.getElementById(`${counter.id}-next-event`).textContent = nextEventText;
 	}
